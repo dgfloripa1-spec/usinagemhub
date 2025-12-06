@@ -1,7 +1,24 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import katex from 'katex';
 import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui/card';
+
+// Helper function to render KaTeX safely
+function renderKaTeX(element: HTMLElement, formula: string, displayMode: boolean = true) {
+  if (!element) return;
+  try {
+    katex.render(formula, element, {
+      displayMode,
+      throwOnError: false,
+      trust: true,
+      strict: false,
+      output: 'html',
+    });
+  } catch (error) {
+    console.error('KaTeX render error:', error);
+    element.innerHTML = `<span class="text-destructive">${formula}</span>`;
+  }
+}
 
 interface FormulaDisplayProps {
   formula: string;
@@ -21,19 +38,12 @@ export function FormulaDisplay({
   variant = 'default' 
 }: FormulaDisplayProps) {
   const formulaRef = useRef<HTMLDivElement>(null);
+  const [rendered, setRendered] = useState(false);
 
   useEffect(() => {
-    if (formulaRef.current) {
-      try {
-        katex.render(formula, formulaRef.current, {
-          displayMode: true,
-          throwOnError: false,
-          trust: true,
-        });
-      } catch (error) {
-        console.error('KaTeX error:', error);
-        formulaRef.current.textContent = formula;
-      }
+    if (formulaRef.current && formula) {
+      renderKaTeX(formulaRef.current, formula, true);
+      setRendered(true);
     }
   }, [formula]);
 
@@ -85,15 +95,8 @@ function VariableItem({ symbol, name, unit }: { symbol: string; name: string; un
   const symbolRef = useRef<HTMLSpanElement>(null);
   
   useEffect(() => {
-    if (symbolRef.current) {
-      try {
-        katex.render(symbol, symbolRef.current, {
-          displayMode: false,
-          throwOnError: false,
-        });
-      } catch {
-        symbolRef.current.textContent = symbol;
-      }
+    if (symbolRef.current && symbol) {
+      renderKaTeX(symbolRef.current, symbol, false);
     }
   }, [symbol]);
 
@@ -134,15 +137,8 @@ function FormulaStep({ formula, label, number }: { formula: string; label?: stri
   const formulaRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    if (formulaRef.current) {
-      try {
-        katex.render(formula, formulaRef.current, {
-          displayMode: true,
-          throwOnError: false,
-        });
-      } catch {
-        formulaRef.current.textContent = formula;
-      }
+    if (formulaRef.current && formula) {
+      renderKaTeX(formulaRef.current, formula, true);
     }
   }, [formula]);
 
@@ -187,15 +183,8 @@ function FormulaRow({ name, formula, description }: { name: string; formula: str
   const formulaRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    if (formulaRef.current) {
-      try {
-        katex.render(formula, formulaRef.current, {
-          displayMode: false,
-          throwOnError: false,
-        });
-      } catch {
-        formulaRef.current.textContent = formula;
-      }
+    if (formulaRef.current && formula) {
+      renderKaTeX(formulaRef.current, formula, false);
     }
   }, [formula]);
 
