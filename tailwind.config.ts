@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
 
+// Adding success/warning colors to extend the theme
+
 export default {
   darkMode: ["class"],
   content: [
