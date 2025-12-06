@@ -143,7 +143,7 @@ interface MaterialsTableProps {
 
 export function MaterialsTable({ onSelect, className }: MaterialsTableProps) {
   const [filter, setFilter] = useState('');
-  const [selectedGrupo, setSelectedGrupo] = useState<string>('');
+  const [selectedGrupo, setSelectedGrupo] = useState<string>('all');
   const grupos = getGruposMateriais();
 
   const filteredMaterials = useMemo(() => {
@@ -151,7 +151,7 @@ export function MaterialsTable({ onSelect, className }: MaterialsTableProps) {
       const matchesSearch = !filter || 
         m.nome.toLowerCase().includes(filter.toLowerCase()) ||
         m.id.toLowerCase().includes(filter.toLowerCase());
-      const matchesGrupo = !selectedGrupo || m.grupo === selectedGrupo;
+      const matchesGrupo = selectedGrupo === 'all' || m.grupo === selectedGrupo;
       return matchesSearch && matchesGrupo;
     });
   }, [filter, selectedGrupo]);
@@ -178,7 +178,7 @@ export function MaterialsTable({ onSelect, className }: MaterialsTableProps) {
               <SelectValue placeholder="Todos os grupos" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todos os grupos</SelectItem>
+              <SelectItem value="all">Todos os grupos</SelectItem>
               {grupos.map(g => (
                 <SelectItem key={g} value={g}>{g}</SelectItem>
               ))}
