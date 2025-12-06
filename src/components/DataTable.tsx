@@ -18,23 +18,23 @@ interface Column {
   unit?: string;
 }
 
-interface DataTableProps {
+interface DataTableProps<T extends Record<string, number>> {
   columns: Column[];
-  data: Record<string, number>[];
-  onChange: (data: Record<string, number>[]) => void;
+  data: T[];
+  onChange: (data: T[]) => void;
   minRows?: number;
   className?: string;
 }
 
-export function DataTable({ 
+export function DataTable<T extends Record<string, number>>({ 
   columns, 
   data, 
   onChange, 
   minRows = 3,
   className 
-}: DataTableProps) {
+}: DataTableProps<T>) {
   const addRow = () => {
-    const newRow = columns.reduce((acc, col) => ({ ...acc, [col.key]: 0 }), {});
+    const newRow = columns.reduce((acc, col) => ({ ...acc, [col.key]: 0 }), {} as T);
     onChange([...data, newRow]);
   };
 
@@ -55,7 +55,7 @@ export function DataTable({
 
   // Initialize with minimum rows if needed
   if (data.length < minRows) {
-    const emptyRow = columns.reduce((acc, col) => ({ ...acc, [col.key]: 0 }), {});
+    const emptyRow = columns.reduce((acc, col) => ({ ...acc, [col.key]: 0 }), {} as T);
     const newData = [...data];
     while (newData.length < minRows) {
       newData.push({ ...emptyRow });
