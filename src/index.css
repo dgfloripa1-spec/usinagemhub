@@ -43,7 +43,9 @@
     --engineering-gray: 215 15% 45%;
     --engineering-steel: 210 10% 70%;
     --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
     --info: 199 89% 48%;
     
     /* Sidebar */
